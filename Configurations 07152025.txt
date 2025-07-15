@@ -1,0 +1,98 @@
+Python Day 2 CCNP 07/15/2025
+py -m pip install --upgrade pip 
+py - m install netmiko
+
+from netmiko import ConnectHandler
+
+from netmiko import ConnectHandler
+
+device_info = {
+    'device_type': 'cisco_ios_telnet',
+    'username': 'admin',
+    'password': 'pass',
+    'secret'L 'pass',
+    'host': '10.22.1.2'
+}
+
+from netmiko import ConnectHandler
+
+device_info = {
+    'device_type': 'cisco_ios_telnet',
+    'username': 'admin',
+    'password': 'pass',
+    'secret': 'pass',
+    'host': '10.22.1.2'
+}
+
+configs = [
+    'int lo 0',
+    'ip add 1.1.1.1 255.255.255.255',
+    'end'
+]
+
+
+ print(device_info['device_type'])
+
+ access_cli = ConnectHandler(**device_info)
+ access_cli.enable()
+ #show_ip = access_cli.send_command('show ip int br')
+ #print(show_ip)
+
+ output = access_cli.send_config_set_(configs)
+ print(output)
+
+##########
+
+11:52 yml
+
+---
+ - name: Add loop
+   hosts: c1
+   gather_facts: no
+   become: yes
+   tasks:
+     - name: add loopback
+       ios_command:
+         commands: 
+           - conf t
+           - int loopback 100
+           - ip add 100.100.100.100 255.255.255.255
+           - exit
+
+
+###########
+
+
+config t
+int gi 2
+no shut
+ip add 192.168.102.11 255.255.255.0
+line vty 0 14
+exec-timeout 0 0
+transport input all
+iox
+interface GigabitEthernet1
+ip address dhcp
+ip nat outside
+no shut
+exit
+!
+interface VirtualPortGroup0
+ip address 192.168.35.1 255.255.255.0
+ip nat inside
+exit
+!
+ip nat inside source list GS_NAT_ACL interface GigabitEthernet1 overload
+ip access-list standard GS_NAT_ACL
+permit 192.168.0.0 0.0.255.255
+!
+app-hosting appid guestshell
+ app-vnic gateway1 virtualportgroup 0 guest-interface 0
+    guest-ipaddress 192.168.35.3 netmask 255.255.255.0	
+	app-default-gateway 192.168.35.1  guest-interface 0 
+	name-server0 1.1.1.1
+ app-resource profile custom 
+   cpu 1500 
+   memory 512
+end
+
