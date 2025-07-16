@@ -1,0 +1,38 @@
+D1: EIGRP
+config t
+router eigrp 100
+ no auto-summary
+ network 10.1.4.6 0.0.0.3
+ network 10.2.1.1 0.0.0.255
+ network 10.2.2.1 0.0.0.255
+ network 192.168.1.129 0.0.0.31
+end
+
+D2: EIGRP
+config t
+router eigrp 100
+ no auto-summary
+ network 10.1.4.8 0.0.0.3
+ network 10.2.1.8 0.0.0.255
+ network 10.2.2.8 0.0.0.255
+ network 192.168.1.128 0.0.0.31
+end
+
+conf t
+	router eigrp CCNPLEVEL
+		address-family ipv4 unicast autonomous-system 100
+		network 10.1.4.8 0.0.0.3
+		network 10.2.1.8 0.0.0.255
+		network 10.2.2.8 0.0.0.255
+		network 192.168.1.128 0.0.0.31
+		end
+	sh ip eigrp nei
+
+
+192.168.17.0 /24
+
+to
+
+192.168.22.0 /24
+
+192.168.16.0 /21
